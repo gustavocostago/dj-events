@@ -1,0 +1,43 @@
+.event {
+    position: relative;
+    padding:2rem;
+    display: flex;
+  }
+  
+  .event h3 {
+    font-size: 25px;
+  }
+  
+  .event p {
+    margin: 10px 0;
+    text-align: justify;
+  }
+  
+  .image {
+    margin-bottom: 20px;
+  }
+  .info{
+    margin-left: 2rem;
+  }
+  .info span{
+    display: flex;
+  }
+  .production{
+    display: flex;
+    align-items: center;
+  }
+  .controls {
+    position: absolute;
+    right: 30px;
+    top: 0;
+  }
+  
+  .delete {
+    margin-left: 20px;
+    color: red;
+  }
+  
+  .back {
+    display: block;
+    margin-top: 40px;
+  }
