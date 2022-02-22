@@ -5,9 +5,9 @@ import EventItem from "../components/EventItem";
 export default function HomePage({events}) {
   return (
     <Layout>
-        <h1>Top Rated Movies</h1>
+        <h1>UpComing Events</h1>
         {events.length === 0 && <h3>No events</h3>}
-        {events.map(item=>(
+        {events.data.map(item=>(
             <EventItem key={item.key} evt={item}/>  
         ))}
         {events.length > 0 && (
@@ -20,10 +20,10 @@ export default function HomePage({events}) {
 }
 
 export async function getStaticProps(){
-  const res = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=`+process.env.API_KEY+'&language=pt-BR&page=6')
+  const res = await fetch('http://localhost:1337/api/events')
   const events = await res.json();
   return{
-    props: {events:events.results.slice(0,3)},
+    props: {events},
     revalidate: 1 
   }
 }
