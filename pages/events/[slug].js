@@ -1,47 +1,32 @@
 
 import Layout from "../../components/Layout"
-import Image from "next/image"
 import styles from '../../styles/Event.module.css'
 import {FaStar} from 'react-icons/fa'
 
 export default function EventPage({evt}) {
   return (
     <Layout>
-        <div className={styles.event}>
-            <div className={styles.img}>
-                <Image src={`https://image.tmdb.org/t/p/original/`+evt.poster_path} width={960} height={900}/>
-            </div>
-            <div className={styles.info}>           
-                <h2>{evt.title}</h2>                
-                <p>{evt.overview}</p>
-                <div className={styles.production}>
-                    <h4>Produção:</h4>
-                    {evt.production_companies.map(item=>(
-                        <span key={item.key} style={{marginLeft:'1rem'}}>
-                            <Image src={`https://image.tmdb.org/t/p/original/`+item.logo_path} 
-                            width={50} height={50}/>
-                        </span>
-                    ))}
-                </div>
-                <div className={styles.production}>
-                    <h4>Gênero:</h4>
-                    {evt.genres.map(item=>(
-                        <span key={item.id} style={{marginLeft:'0.5rem'}}>
-                            <p>{item.name},</p>                        
-                        </span>                    
-                    ))}
-                </div>
-                <span><h4 style={{marginRight:'0.5rem'}}>Data Lançamento: </h4>{evt.release_date.split('-').reverse().join('/')}</span>                               
-                <p><FaStar/> {evt.vote_average}</p>
-            </div>
+        <div className={styles.event}>            
+                {evt.data.map(item=>(
+                    <div className={styles.info} key={item.key}>
+                        <span>Data: {item.attributes.date.split('-').reverse().join('/')}</span>
+                        <h2>{item.attributes.name}</h2>
+                        <h3>Atrações: {item.attributes.performers}</h3>
+                        <h4>{item.attributes.venue}</h4>
+                        <h5>{item.attributes.address}</h5>
+                        <p><FaStar/> {item.attributes.description}</p>
+                    </div>
+                ))}
+            {console.log(evt)}
         </div>      
     </Layout>
   )
 }
 
 export async function getServerSideProps({query:{slug}}){
-  const res = await fetch(`https://api.themoviedb.org/3/movie/${slug}+?api_key=`+process.env.API_KEY+'&language=pt-BR&page=3')
+  const res = await fetch(`http://localhost:1337/api/events?filters[id][$eq]=${slug}`)
   const events = await res.json();
+  console.log(events)
   return{
     props: {
         evt : events
