@@ -1,22 +1,23 @@
+import moment from 'moment'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Layout from '../../components/Layout'
-import styles from '../../styles/Form.module.css'
+import Layout from '../../../components/Layout'
+import styles from '../../../styles/Form.module.css'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import slugify from 'slugify';
 
 
-export default function AddEventPage() {
+export default function EditEventPage({evt}) {
     const [values,setValues] = useState({
-        name: '',
-        performers:'',
-        venue:'',
-        address:'',
-        date:'',
-        slug:'',
-        description:''
+        name: evt.attributes.name,
+        performers: evt.attributes.performers,
+        venue:evt.attributes.venue,
+        address:evt.attributes.address,
+        date:evt.attributes.date,
+        slug:evt.attributes.slug,
+        description:evt.attributes.description
     })
     const router = useRouter();
     const handleSubmit = async (e)=>{
@@ -51,9 +52,9 @@ export default function AddEventPage() {
             [name]:value})                 
     }    
   return (
-    <Layout title='Add New Event'>
+    <Layout title='Update Event'>
         <Link href='/events'>Go Back Home</Link>
-        <h1>Add Event</h1>
+        <h1>Edit Event</h1>
         <ToastContainer position='top-center'/>
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.grid}>
@@ -103,7 +104,7 @@ export default function AddEventPage() {
                 type='date'
                 name='date'
                 id='date'
-                value={values.date || ''}
+                value={moment(values.date).format('yyyy-MM-DD') || ''}
                 onChange={handleInputChange}
                 />
             </div>
@@ -118,8 +119,17 @@ export default function AddEventPage() {
                 onChange={handleInputChange}
             ></textarea>
             </div>
-            <button className='btn' type='submit'>Add Event</button>
+            <button className='btn' type='submit'>Update Event</button>
         </form>
     </Layout>
   )
+}
+export async function getServerSideProps({params:{id}}){
+    const res = await fetch(`http://localhost:1337/api/events?filters[id][$eq]=${id}`)
+    const evt = await res.json()
+    return{
+        props:{
+            evt: evt.data[0]
+        }
+    }
 }

@@ -7,8 +7,8 @@ export default function HomePage({events}) {
     <Layout>
         <h1>UpComing Events</h1>
         {events.length === 0 && <h3>No events</h3>}
-        {events.data.map(item=>(
-            <EventItem key={item.key} evt={item}/>  
+        {events.map(item=>(
+            <EventItem key={item.id} evt={item}/>  
         ))}
         {events.length > 0 && (
             <Link href='/events'>
@@ -23,7 +23,7 @@ export async function getStaticProps(){
   const res = await fetch('http://localhost:1337/api/events')
   const events = await res.json();
   return{
-    props: {events},
+    props: {events: events.data.slice(0,3)},
     revalidate: 1 
   }
 }
