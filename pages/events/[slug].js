@@ -1,6 +1,7 @@
 
 import Layout from "../../components/Layout"
 import Link from 'next/link'
+import Image from "next/image"
 import {useRouter} from 'next/router'
 import styles from '../../styles/Event.module.css'
 import {FaStar, FaPencilAlt,FaTimes} from 'react-icons/fa'
@@ -25,7 +26,7 @@ export default function EventPage({evt}) {
     }
   return (
     <Layout>
-        <div className={styles.event}>
+        <div className={styles.event} key={evt.data[0].id}>
             <div className={styles.controls}>
                 <Link href={`/events/edit/${evt.data[0].id}`}>
                     <a><FaPencilAlt/>Edit Event</a>
@@ -35,6 +36,10 @@ export default function EventPage({evt}) {
                 </Link>
             </div>            
             {evt.data.map(item=>(
+                <>
+                <div className={styles.img} key={item.attributes.image.data[0]}>
+                    <Image src={item.attributes.image.data[0].attributes.formats.large.url} width={1000} height={667}/>
+                </div>
                 <div className={styles.info} key={item.id}>
                     <span>
                         Data: 
@@ -52,6 +57,7 @@ export default function EventPage({evt}) {
                     <h5>{item.attributes.address}</h5>
                     <p><FaStar/> {item.attributes.description}</p>
                 </div>
+                </>
             ))}
         </div>      
     </Layout>
@@ -59,7 +65,7 @@ export default function EventPage({evt}) {
 }
 
 export async function getServerSideProps({query:{slug}}){
-  const res = await fetch(`http://localhost:1337/api/events?filters[slug][$eq]=${slug}`)
+  const res = await fetch(`http://localhost:1337/api/events?filters[slug][$eq]=${slug}&populate=*`)
   const events = await res.json();
   return{
     props: {

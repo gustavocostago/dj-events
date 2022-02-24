@@ -125,7 +125,7 @@ export default function EditEventPage({evt}) {
   )
 }
 export async function getServerSideProps({params:{id}}){
-    const res = await fetch(`http://localhost:1337/api/events?filters[id][$eq]=${id}`)
+    const res = await fetch(`http://localhost:1337/api/events/filters[id][$eq]=${id}`)
     const evt = await res.json()
     return{
         props:{

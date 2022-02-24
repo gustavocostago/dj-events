@@ -1,10 +1,22 @@
+import Image from 'next/image';
 import Link from 'next/link'
+import { useState } from 'react';
 import {FaStar} from 'react-icons/fa';
 import styles from '../styles/EventItem.module.css'
 
 export default function EventItem({evt}) { 
+    const [imagePreview,setImagePreview] =useState(
+        evt.attributes.image.data ? evt.attributes.image.data[0].attributes.formats.large.url : null 
+    )
   return (
     <div className={styles.event} key={evt.id}>
+        <div className={styles.img}>
+            {imagePreview?(
+                <Image src={imagePreview} width={400} height={300} alt='image'/>
+            ): <div>
+                    <p>No image upload</p>
+                </div>}    
+        </div>
         <div className={styles.info}>
             <span>Data: {new Date(evt.attributes.date).toISOString().substring(0,10).split("-").reverse().join("/")}</span>
             <h2>{evt.attributes.name}</h2>

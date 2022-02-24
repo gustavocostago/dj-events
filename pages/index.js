@@ -20,7 +20,7 @@ export default function HomePage({events}) {
 }
 
 export async function getStaticProps(){
-  const res = await fetch('http://localhost:1337/api/events')
+  const res = await fetch('http://localhost:1337/api/events?populate=*')
   const events = await res.json();
   return{
     props: {events: events.data.slice(0,3)},
