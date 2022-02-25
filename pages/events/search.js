@@ -11,7 +11,7 @@ export default function SearchPage({events}) {
         <h1>Search for results for {router.query.term}</h1>
         {events.length === 0 && <h3>No events</h3>}
         {events.data.map(item=>(
-            <EventItem key={item.attributes.id} evt={item}/>  
+            <EventItem key={item.id} evt={item}/>  
         ))}
     </Layout>
   )

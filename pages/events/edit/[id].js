@@ -1,15 +1,23 @@
 import moment from 'moment'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import Link from 'next/link'
 import Layout from '../../../components/Layout'
+import Modal from '../../../components/Modal'
 import styles from '../../../styles/Form.module.css'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import {FaImage} from 'react-icons/fa'
 import slugify from 'slugify';
+import ImageUpload from '../../../components/ImageUpload'
 
 
 export default function EditEventPage({evt}) {
+    const [imagePreview,setImagePreview] = useState(
+        evt.attributes.image.data ? evt.attributes.image.data[0].attributes.formats.thumbnail.url : null 
+    )
+    const [showModal, setShowModal] = useState(false)
     const [values,setValues] = useState({
         name: evt.attributes.name,
         performers: evt.attributes.performers,
@@ -27,8 +35,8 @@ export default function EditEventPage({evt}) {
         if(hasEmptyFiels){
             toast.error('Please fill in all fields')
         }
-        const res = await fetch('http://localhost:1337/api/events',{
-            method:'POST',
+        const res = await fetch(`http://localhost:1337/api/events/${evt.id}`,{
+            method:'PUT',
             headers:{
                 'Content-Type':'application/json'
             },
@@ -39,6 +47,7 @@ export default function EditEventPage({evt}) {
         }
         else{
             const evt = await res.json();
+            toast.success('Update sucess')
             router.push(`/events/${evt.data.attributes.slug}`)
         }
     }    
@@ -50,6 +59,12 @@ export default function EditEventPage({evt}) {
         setValues({...values,
             ...updatedValue,
             [name]:value})                 
+    }
+    const imageUploaded = async (e) =>{
+        const res = await fetch(`http://localhost:3000/api/events/${evt.id}`)
+        const data = await res.json()
+        setImagePreview(data.attributes.image.data[0].attributes.formats.large.url)
+        setShowModal(false)
     }    
   return (
     <Layout title='Update Event'>
@@ -121,15 +136,30 @@ export default function EditEventPage({evt}) {
             </div>
             <button className='btn' type='submit'>Update Event</button>
         </form>
+        <div className={styles.img}>
+            <h4>Event Image</h4>
+            {imagePreview?(
+            <Image src={imagePreview} width={170} height={100} alt='image'/>)
+                :<div>
+                    <p>No image upload</p>
+                </div>
+            }             
+        </div>
+        <button onClick={()=>{setShowModal(true)}} className='btn-secondary btn-icon'>
+            <FaImage/> Set Image
+        </button>
+        <Modal show={showModal} onClose={()=>{setShowModal(false)}}>
+            <ImageUpload evtId={evt.id} imageUploaded={imageUploaded}/>
+        </Modal>
     </Layout>
   )
 }
 export async function getServerSideProps({params:{id}}){
-    const res = await fetch(`http://localhost:1337/api/events/filters[id][$eq]=${id}`)
+    const res = await fetch(`http://localhost:1337/api/events/${id}?populate=*`)
     const evt = await res.json()
     return{
         props:{
-            evt: evt.data[0]
+            evt: evt.data
         }
     }
 }

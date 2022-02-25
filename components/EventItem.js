@@ -6,7 +6,7 @@ import styles from '../styles/EventItem.module.css'
 
 export default function EventItem({evt}) { 
     const [imagePreview,setImagePreview] =useState(
-        evt.attributes.image.data ? evt.attributes.image.data[0].attributes.formats.large.url : null 
+        evt.attributes.image.data ? evt.attributes.image.data[0].attributes.formats.thumbnail.url : null 
     )
   return (
     <div className={styles.event} key={evt.id}>
