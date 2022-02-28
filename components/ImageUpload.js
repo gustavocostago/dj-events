@@ -17,6 +17,7 @@ export default function ImageUpload({evtId, imageUploaded}) {
             body: formData,
         })
         if(res.ok){
+            toast.success('Upload Sucess!')
             imageUploaded()
         }else(
             toast.error('Something Were Wrong!')
