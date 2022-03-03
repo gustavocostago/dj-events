@@ -33,7 +33,7 @@ export default function Header() {
                         <Link href='/account/dashboard'>
                             <a>Dashboard</a>
                         </Link>
-                    </li> 
+                    </li>
                     <li>
                         <button className='btn-secondary' onClick={()=> logout()}><FaSignOutAlt/> Logout</button>
                     </li>                 

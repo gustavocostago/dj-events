@@ -7,13 +7,15 @@ import Link from 'next/link'
 import Layout from '../../components/Layout'
 import styles from '../../styles/AuthForm.module.css'
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [username,setUsername] = useState('')
   const [email,setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
 
   const {register,error} = useContext(AuthContext)
+
+  useEffect(() => error && toast.error(error))
   const handleSubmit = (e) =>{
     e.preventDefault()
     if(password !== passwordConfirm){
@@ -44,7 +46,7 @@ export default function LoginPage() {
             <label>Confirm Password</label>
             <input type='password' name='passwordConfirm' id='passwordConfirm' value={passwordConfirm} onChange={(e)=>setPasswordConfirm(e.target.value)}/>
           </div>
-          <input type='submit' value='Login' className='btn'/>
+          <input type='submit' value='Register' className='btn'/>
         </form>
         <p>
           Already have an account? <Link href='/account/login'>Login</Link>
